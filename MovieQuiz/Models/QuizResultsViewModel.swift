@@ -1,8 +1,8 @@
 //
-//  QuizResultsViewModels.swift
+//  QuizResultsViewModel.swift
 //  MovieQuiz
 //
-//  Created by Alexey Kremnev on 8/28/24.
+//  Created by Alexey Kremnev on 9/7/24.
 //
 
 import Foundation
