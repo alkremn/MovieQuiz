@@ -21,27 +21,29 @@ final class MovieQuizViewController: UIViewController {
     //MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        alertPresenter = AlertPresenter(viewController: self)
-
-        let questionFactory = QuestionFactory()
-        questionFactory.delegate = self
-        self.questionFactory = questionFactory
-        questionFactory.requestNextQuestion()
+        setupInitial()
     }
     
     //MARK: - Actions
     @IBAction private func answerButtonClicked(_ sender: Any) {
-        guard let currentQuestion = currentQuestion else { return }
-        guard let answerButton = sender as? UIButton else { return }
+        guard let currentQuestion = currentQuestion,
+              let answerButton = sender as? UIButton  else { return }
         
         let trueAnswer = answerButton == yesButton
         showAnswerResult(isCorrect: currentQuestion.correctAnswer == trueAnswer)
     }
     
     //MARK: - Private functions
+    private func setupInitial() {
+        alertPresenter = AlertPresenter(viewController: self)
+        let questionFactory = QuestionFactory()
+        questionFactory.delegate = self
+        self.questionFactory = questionFactory
+        questionFactory.requestNextQuestion()
+    }
+    
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
-        return QuizStepViewModel(
+        .init(
             image: UIImage(named: model.image) ?? UIImage(),
             question: model.text,
             questionNumber: "\(currentQuestionIndex + 1)/\(questionsCount)"
@@ -63,7 +65,7 @@ final class MovieQuizViewController: UIViewController {
         yesButton.isEnabled = false
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
-            guard let self = self else { return }
+            guard let self else { return }
             
             self.imageView.layer.borderWidth = 0
             self.showNextQuestionOrResults()
@@ -115,7 +117,7 @@ final class MovieQuizViewController: UIViewController {
 //MARK: - QuestionFactoryDelegate Extension
 extension MovieQuizViewController: QuestionFactoryDelegate {
     func didReceiveNextQuestion(question: QuizQuestion?) {
-        guard let question = question else { return }
+        guard let question else { return }
         
         currentQuestion = question
         let viewModel = convert(model: question)

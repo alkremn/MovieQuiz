@@ -7,9 +7,9 @@
 
 import UIKit
 
-class AlertPresenter {
+final class AlertPresenter {
     
-    private let viewController: UIViewController!
+    private let viewController: UIViewController
     
     init(viewController: UIViewController) {
         self.viewController = viewController
