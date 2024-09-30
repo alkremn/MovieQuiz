@@ -48,15 +48,18 @@ final class QuestionFactory: QuestionFactoryProtocol {
             do {
                 imageData = try Data.init(contentsOf: movie.resizedImageURL)
             } catch {
-                print("Failed to load image")
+                DispatchQueue.main.async { [weak self] in
+                    guard let self else { return }
+                    self.delegate?.didFailToLoadData(with: error)
+                }
             }
 
             let rating = Float(movie.rating) ?? 0.0
-            let randomRating = Float.random(in: 4...8)
+            let randomRating = Int.random(in: 7...9)
             let question = QuizQuestion(image: imageData,
                                         actualRating: rating,
-                                        text: "Рейтинг этого фильма больше чем \(String.init(format: "%.1f", randomRating))?",
-                                        correctAnswer: rating > randomRating)
+                                        text: "Рейтинг этого фильма больше чем \(randomRating)?",
+                                        correctAnswer: rating > Float(randomRating))
             
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }

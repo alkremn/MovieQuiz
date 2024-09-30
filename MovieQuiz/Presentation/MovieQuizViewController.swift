@@ -82,6 +82,7 @@ final class MovieQuizViewController: UIViewController {
         if currentQuestionIndex < questionsCount - 1 {
             currentQuestionIndex += 1
             questionFactory?.requestNextQuestion()
+            showLoadingIndicator()
             return
         }
         
@@ -144,13 +145,13 @@ final class MovieQuizViewController: UIViewController {
         currentAnswers = 0
         currentQuestionIndex = 0
         questionFactory?.requestNextQuestion()
+        showLoadingIndicator()
     }
 }
 
 //MARK: - QuestionFactoryDelegate Extension
 extension MovieQuizViewController: QuestionFactoryDelegate {
     func didLoadDataFromServer() {
-        hideLoadingIndicator()
         questionFactory?.requestNextQuestion()
     }
     
@@ -165,6 +166,7 @@ extension MovieQuizViewController: QuestionFactoryDelegate {
         currentQuestion = question
         let viewModel = convert(model: question)
         DispatchQueue.main.async { [weak self] in
+            self?.hideLoadingIndicator()
             self?.show(viewModel: viewModel)
         }
     }
