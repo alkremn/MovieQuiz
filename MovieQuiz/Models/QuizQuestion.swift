@@ -8,8 +8,8 @@
 import Foundation
 
 struct QuizQuestion {
-    let image: String
-    let actualRating: Double
+    let image: Data
+    let actualRating: Float
     let text: String
     let correctAnswer: Bool
 }
