@@ -41,8 +41,7 @@ final class MovieQuizViewController: UIViewController {
     //MARK: - Private functions
     private func setupInitial() {
         alertPresenter = AlertPresenter(viewController: self)
-        let questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
-        self.questionFactory = questionFactory
+        self.questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         textLabel.text = ""
     }
     
@@ -166,8 +165,9 @@ extension MovieQuizViewController: QuestionFactoryDelegate {
         currentQuestion = question
         let viewModel = convert(model: question)
         DispatchQueue.main.async { [weak self] in
-            self?.hideLoadingIndicator()
-            self?.show(viewModel: viewModel)
+            guard let self else { return }
+            self.hideLoadingIndicator()
+            self.show(viewModel: viewModel)
         }
     }
 }
