@@ -7,7 +7,11 @@
 
 import Foundation
 
-struct NetworkClient {
+protocol NetworkLoading {
+    func fetch(url: URL, handler: @escaping (Result<Data, Error>) -> Void)
+}
+
+struct NetworkClient: NetworkLoading {
     
     private enum NetworkError: Error {
         case codeError
@@ -33,5 +37,4 @@ struct NetworkClient {
         
         task.resume()
     }
-    
 }
