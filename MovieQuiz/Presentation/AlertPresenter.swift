@@ -26,6 +26,7 @@ final class AlertPresenter {
             alertModel.completion()
         }
         
+        alert.view.accessibilityIdentifier = "ResultAlert"
         alert.addAction(alertAction)
         viewController?.present(alert, animated: true, completion: nil)
     }
