@@ -6,12 +6,24 @@
 //
 
 import Foundation
+import XCTest
 @testable import MovieQuiz
 
 final class MovieQuizViewControllerMock: MovieQuizViewControllerProtocol {
-    func show(viewModel: MovieQuiz.QuizStepViewModel) {}
+    private let expectation: XCTestExpectation
     
-    func show(result model: MovieQuiz.QuizResultsViewModel) {}
+    init(expectation: XCTestExpectation) {
+        self.expectation = expectation
+    }
+    
+    var resultModal: QuizStepViewModel?
+    
+    func show(viewModel: QuizStepViewModel) {
+        resultModal = viewModel
+        expectation.fulfill()
+    }
+    
+    func show(result model: QuizResultsViewModel) {}
     
     func highlightImageBorder(isCorrect: Bool) {}
     

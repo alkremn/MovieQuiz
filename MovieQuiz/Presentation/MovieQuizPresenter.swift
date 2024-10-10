@@ -9,7 +9,7 @@ import UIKit
 
 
 final class MovieQuizPresenter {
-    private weak var viewController: MovieQuizViewControllerProtocol!
+    private weak var viewController: MovieQuizViewControllerProtocol?
     
     private let statisticService: StatisticServiceProtocol
     private var questionFactory: QuestionFactoryProtocol?
@@ -24,11 +24,11 @@ final class MovieQuizPresenter {
     init(viewController: MovieQuizViewControllerProtocol) {
         self.viewController = viewController
         
-        self.statisticService = StatisticService()
-        self.questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
+        statisticService = StatisticService()
+        questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
         
         viewController.showLoadingIndicator()
-        self.questionFactory?.loadData()
+        questionFactory?.loadData()
     }
     
     //MARK: - Public methods
@@ -45,7 +45,7 @@ final class MovieQuizPresenter {
     private func proceedWithAnswer(isCorrect: Bool) {
         if isCorrect { currentAnswers += 1 }
         
-        viewController.highlightImageBorder(isCorrect: isCorrect)
+        viewController?.highlightImageBorder(isCorrect: isCorrect)
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self else { return }
@@ -90,12 +90,12 @@ final class MovieQuizPresenter {
     }
     
     private func createResultMessage(answers: Int) -> String {
-        return """
+        """
             Ваш результат: \(answers)/10
             Количество сыгранных квизов: \(statisticService.gamesCount)
             Рекорд: \(statisticService.bestGame.toString())
             Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%
-            """
+        """
     }
 }
 
@@ -130,12 +130,3 @@ extension MovieQuizPresenter: QuestionFactoryDelegate {
         }
     }
 }
-
-
-#if DEBUG
-extension MovieQuizPresenter {
-    func _convert(model: QuizQuestion) -> QuizStepViewModel {
-        convert(model: model)
-    }
-}
-#endif
